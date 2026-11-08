@@ -94,6 +94,14 @@ class Opam(AutotoolsPackage):
         # https://github.com/Homebrew/homebrew-core/blob/master/Formula/opam.rb
         env.set("OCAMLPARAM", "safe-string=0,_")  # OCaml 4.06.0 compat
 
+    def setup_run_environment(self, env: EnvironmentModifications) -> None:
+        env.set("OPAMROOT", self.prefix.opamroot)
+
+    def setup_dependent_build_environment(
+        self, env: EnvironmentModifications, dependent_spec: Spec
+    ) -> None:
+        env.set("OPAMROOT", self.prefix.opamroot)
+
     def configure(self, spec, prefix):
         args = ["--prefix={0}".format(prefix)]
 
@@ -123,3 +131,4 @@ class Opam(AutotoolsPackage):
             opam("init", "--root={0}/root".format(prefix), "-n")
         if spec.satisfies("~user ~sandbox"):
             opam("init", "--root={0}/root".format(prefix), "-n", "--disable-sandboxing", "-y")
+        mkdir(prefix.opamroot)

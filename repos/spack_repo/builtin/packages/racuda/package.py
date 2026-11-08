@@ -36,20 +36,29 @@ class Racuda(AutotoolsPackage):
 
     depends_on("gmp@4.2:", type=("build", "link"))
     depends_on("mpfr@2.2:", type=("build", "link"))
-    # The readme didn't mention this, but it's actually needed.
-    depends_on("clp", type=("build", "link"))
     depends_on("gsl@1.6:", type=("build"))
     depends_on("ocaml@4.0:", type=("build"))
-    depends_on("ocamlbuild", type=("build"))
-    # The readme didn't mention this, but it's actually needed.
-    depends_on("opam-ocamlfind", type=("build"))
-    # The readme didn't mention this, but it's actually needed.
-    depends_on("dune", type=("build"))
+	# for all opam related, please use the modified opam root,
+	# and install manually with opam install.
+    depends_on("opam", type=("build", "run"))
+    depends_on("opam-ocamlbuild", type=("build", "run"))
+
+    # The readme didn't mention these which turn out to be needed
+    depends_on("opam-ocamlfind", type=("build", "run"))
+    depends_on("opam-menhir", type=("build", "run"))
+    #depends_on("dune", type=("build"))
+    depends_on("clp", type=("build", "link"))
+    depends_on("coinutils", type=("build", "link"))
+
     depends_on("c", type=("build"))
     depends_on("cxx", type=("build"))
 
     def configure_args(self):
         clpdir = self.spec["clp"].prefix
+        coindir = self.spec["coinutils"].prefix
         return [
-            "-clp {clpdir}",
+            "-clp",
+            clpdir,
+            "-coin-utils",
+            coindir,
         ]
